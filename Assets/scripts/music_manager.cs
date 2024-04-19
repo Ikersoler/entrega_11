@@ -23,6 +23,12 @@ public class music_manager : MonoBehaviour
 
     [SerializeField] private AudioSource audio;
 
+    [SerializeField] private TMPro.TMP_Text nameSong;
+
+    private float songLength;
+
+    private float currentTimeMusic;
+
     private bool isLooping = false;
 
     private int currentTrackIndex = 0;
@@ -46,14 +52,35 @@ public class music_manager : MonoBehaviour
         
 
         audio.clip = musicArray[0];
+
+        songLength = audio.clip.length;
+        imagePlace.sprite = musicImages[currentTrackIndex];
+        nameSong.text = musicArray[currentTrackIndex].name;
     }
 
     void Update()
     {
+
+        currentTimeMusic = audio.time;
+
+        if (currentTimeMusic >= songLength ) 
+        {
+            PlayNextTrack();
+        }
+
+
+
+
+
+
+
+
+        /* 
         if (!audio.isPlaying && !isLooping)
         {
             PlayNextTrack();
         }
+        */
     }
 
     public void PlayMusic()
@@ -72,6 +99,9 @@ public class music_manager : MonoBehaviour
         currentTrackIndex = (currentTrackIndex + 1) % musicArray.Length;
         audio.clip = musicArray[currentTrackIndex];
         audio.Play();
+        songLength = audio.clip.length;
+        imagePlace.sprite = musicImages[currentTrackIndex];
+        nameSong.text = musicArray[currentTrackIndex].name;
     }
 
     public void PlayPreviousTrack()
@@ -79,11 +109,16 @@ public class music_manager : MonoBehaviour
         currentTrackIndex = (currentTrackIndex - 1 + musicArray.Length) % musicArray.Length;
         audio.clip = musicArray[currentTrackIndex];
         audio.Play();
+        songLength = audio.clip.length;
+        imagePlace.sprite = musicImages[currentTrackIndex];
+        nameSong.text = musicArray[currentTrackIndex].name;
     }
 
-    void StopMusic()
+    public void StopMusic()
     {
         audio.Stop();
+        imagePlace.sprite = musicImages[currentTrackIndex];
+        nameSong.text = musicArray[currentTrackIndex].name;
     }
 
     void PlayRandomTrack()
@@ -91,6 +126,9 @@ public class music_manager : MonoBehaviour
         int randomIndex = Random.Range(0, musicArray.Length);
         audio.clip = musicArray[randomIndex];
         audio.Play();
+        songLength = audio.clip.length;
+        imagePlace.sprite = musicImages[randomIndex];
+        nameSong.text = musicArray[randomIndex].name;
     }
     
     void ToggleLoop()
